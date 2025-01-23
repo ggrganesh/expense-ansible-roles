@@ -1,3 +1,7 @@
+- name: configure frontend server
+  hosts: frontend
+  become: yes
+  tasks: 
     - name: Install nginx server
       ansible.builtin.package:
         name: nginx
@@ -30,9 +34,10 @@
         dest: /usr/share/nginx/html
         remote_src: yes
     
-    - name: copy expense config
-      ansible.builtin.template:
+    - name: Copy expense conf files
+      ansible.builtin.templete:
         src: expense.conf.j2
         dest: /etc/nginx/default.d/expense.conf
       notify: 
-      - Restart Nginx
+      - Restart nginx
+
