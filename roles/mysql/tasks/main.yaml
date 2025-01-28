@@ -19,7 +19,7 @@
    - name: Collect all info except settings and users by root
      community.mysql.mysql_info:
         login_user: root
-        login_password: "{{ mysql_root_password }}"
+        login_password: "{{ lookup('amazon.aws.aws_ssm', '/expense/mysql/mysql-root-password', decrypt=False  ) }}"
         login_host: "{{ mysql_host }}"
      register: mysql_info
      ignore_errors: true
@@ -29,5 +29,5 @@
          msg: "My SQL info; {{ mysql_info }}"
 
    - name: Setup root password 
-     ansible.builtin.command: " mysql_secure_installation --set-root-pass {{ mysql_root_password }} "
+     ansible.builtin.command: " mysql_secure_installation --set-root-pass {{ mysql_root_passwordlookup('amazon.aws.aws_ssm', '/expense/mysql/mysql-root-password', decrypt=False  ) }} "
      when: mysql_info.failed is true
